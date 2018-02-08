@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\User;
+use App\Queue;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,10 +26,40 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $me = Auth::user();
+        $whereIAmFirstInLine = collect();
+        User::where('id', '!=', Auth::user()->id)->get()->each(function($user) use ($me, $whereIAmFirstInLine) {
+            $queue = $user->queueActivatedNotDone()->where('guest_user_id', $me->id)->first();
+            if (!is_null($queue)) {
+                $whereIAmFirstInLine->push($queue);
+            }
+        });
+
+        $queueStatusList = collect();
+        User::where('id', '!=', Auth::user()->id)->get()->each(function($user) use ($me, $queueStatusList) {
+            $queues = $user->queueNotHelped()->where('host_user_id', $user->id)->get();
+            $queueNumber = $queues->search(
+                function($queueItem) use ($me) {
+                    return $queueItem->guest_user_id == $me->id;
+                }
+            );
+            if ($queueNumber === false) {
+                return;
+            }
+            $queueStatusList->push([
+                'user' => $user,
+                'queueNumber' => ++$queueNumber,
+            ]);
+        });
+
+        $queueStatusList = $queueStatusList->sortBy('queueNumber');
+
         return view('home')->with([
             'users' => User::where('id', '!=', Auth::user()->id)->get(),
             'queue' => Auth::user()->queue()->whereNull('done_at')->get(),
             'me' => Auth::user(),
+            'whereIAmFirstInLine' => $whereIAmFirstInLine,
+            'queueStatusList' => $queueStatusList,
         ]);
     }
 

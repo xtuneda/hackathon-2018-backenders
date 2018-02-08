@@ -42,6 +42,20 @@ class User extends Authenticatable
         return $this->queue()->whereNotNull('activated_at')->whereNull('done_at');
     }
 
+    public function queueNumber(User $user)
+    {
+        $queues = $user->queueNotHelped()->where('host_user_id', $this->id)->get();
+        $queueNumber = $queues->search(
+            function($queueItem) use ($me) {
+                return $queueItem->guest_user_id == $me->id;
+            }
+        );
+        if ($queueNumber === false) {
+            return null;
+        }
+        return $queueNumber;
+    }
+
     public function hasUserInQueue(User $user)
     {
         return !$this->queue

@@ -5,6 +5,32 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
+                <div class="card-header">Status</div>
+
+                <div class="card-body">
+                    <ul>
+                        @foreach ($whereIAmFirstInLine as $queueItem)
+                        <li><b>It's your turn at {{ $queueItem->host->name }}'s queue</b> </li>
+                        @endforeach
+                    </ul>
+                    <ul>
+                        @foreach ($queueStatusList as $list)
+                        <li>
+                            @if ($list['queueNumber'] == 1)
+                            You are next in line at {{ $list['user']->name }}'s queue
+                            @else
+                            You have queue number {{ $list['queueNumber'] }} at {{ $list['user']->name }}'s queue
+                            @endif
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-4">
+            <div class="card card-default">
                 <div class="card-header">Connected users</div>
 
                 <div class="card-body">
@@ -51,9 +77,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <div class="card card-default">
                 <div class="card-header">My queue</div>
 
