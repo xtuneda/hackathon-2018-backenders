@@ -15,6 +15,10 @@ class CreateQueuesTable extends Migration
     {
         Schema::create('queues', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('host_user_id');
+            $table->integer('guest_user_id');
+            $table->datetime('activated_at')->nullable();
+            $table->datetime('done_at')->nullable();
             $table->timestamps();
         });
     }

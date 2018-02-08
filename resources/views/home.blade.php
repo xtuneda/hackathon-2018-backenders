@@ -5,16 +5,73 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Connected users</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                    <ul>
+                        @foreach ($users as $user)
+                        <li>
+                            {{ $user->name }}
+                            @if ($user->hasUserInQueue($me))
+                            <a href="{{ route('leave', $user->id) }}">Leave</a>
+                            @else
+                            <a href="{{ route('join', $user->id) }}">Join</a>
+                            @endif
+                            <ol>
+                                @if ($user->hasUserInQueue($me))
 
-                    You are logged in!
+                                @foreach ($user->queueUntilUser($me) as $item)
+                                <li>
+                                    @if ($item->guest->id == $me->id)
+                                    {{ $item->guest->name }} (<b>Jag</b>)
+                                    @else
+                                    {{ $item->guest->name }}
+                                    @endif
+                                </li>
+                                @endforeach
+
+                                @else
+
+                                @foreach ($user->queue as $item)
+                                <li>
+                                    @if ($item->guest->id == $me->id)
+                                    {{ $item->guest->name }} (<b>Jag</b>)
+                                    @else
+                                    {{ $item->guest->name }}
+                                    @endif
+                                </li>
+                                @endforeach
+
+                                @endif
+                                
+                            </ol>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-default">
+                <div class="card-header">My queue</div>
+
+                <div class="card-body">
+                    <ol>
+                        @foreach ($queue as $item)
+                        <li>
+                            {{ $item->guest->name }}
+                            @if (!$item->isActivated())
+                            <a href="{{ route('activate', $item->guest->id) }}">Activate</a>
+                            <a href="{{ route('remove', $item->guest->id) }}" class="pull-right">Remove</a>
+                            @else
+                            <b>Currently being helped</b>
+                            <a href="{{ route('done') }}">Done</a>
+                            @endif
+                        </li>
+                        @endforeach
+                    </ol>
                 </div>
             </div>
         </div>

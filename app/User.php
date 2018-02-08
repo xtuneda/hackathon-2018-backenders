@@ -26,4 +26,55 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function queue()
+    {
+        return $this->hasMany('App\Queue', 'host_user_id');
+    }
+
+    public function queueNotHelped()
+    {
+        return $this->queue()->whereNull('activated_at')->whereNull('done_at');
+    }
+
+    public function queueActivatedNotDone()
+    {
+        return $this->queue()->whereNotNull('activated_at')->whereNull('done_at');
+    }
+
+    public function hasUserInQueue(User $user)
+    {
+        return !$this->queue
+        ->filter(function($item) use ($user) {
+            return $item->guest_user_id == $user->id;
+        })->isEmpty();
+    }
+
+    public function queueUntilUser(User $user)
+    {
+        $queueId = $this->queue
+        ->where('guest_user_id', $user->id)
+        ->first()
+        ->id;
+
+        return $this->queue->where('id', '<=', $queueId);
+    }
+
+    public function addToQueue(User $user)
+    {
+        $queue = $this->queue;
+        $queueItem = new Queue();
+        $queueItem->host_user_id = $this->id;
+        $queueItem->guest_user_id = $user->id;
+
+        $queue->push($queueItem);
+        $this->queue()->saveMany($queue);
+    }
+
+    public function removeFromQueue(User $user)
+    {
+        $this->queue->where('guest_user_id', $user->id)
+        ->first()
+        ->delete();
+    }
 }
