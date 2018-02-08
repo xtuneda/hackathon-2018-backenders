@@ -27,6 +27,7 @@
                             @else
                             You have queue number {{ $list['queueNumber'] }} at {{ $list['user']->name }}'s queue
                             @endif
+                            <a href="{{ route('leave', $list['user']->id) }}">Leave</a>
                         </li>
                         @endforeach
                     </ul>
@@ -44,9 +45,7 @@
                         @foreach ($users as $user)
                         <li>
                             {{ $user->name }}
-                            @if ($user->hasUserInQueue($me))
-                            <a href="{{ route('leave', $user->id) }}">Leave</a>
-                            @else
+                            @if (!$user->hasUserInQueue($me))
                             <a href="{{ route('join', $user->id) }}">Join</a>
                             @endif
                             <ol>
