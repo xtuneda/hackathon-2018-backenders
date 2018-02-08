@@ -8,6 +8,9 @@
                 <div class="card-header">Status</div>
 
                 <div class="card-body">
+                    @if ($whereIAmFirstInLine->isEmpty() && $queueStatusList->isEmpty())
+                        <l>You are <b>not</b> in any queue at the moment</l>
+                    @endif
                     <ul>
                         @foreach ($whereIAmFirstInLine as $queueItem)
                         <li><b>It's your turn at {{ $queueItem->host->name }}'s queue</b> </li>
