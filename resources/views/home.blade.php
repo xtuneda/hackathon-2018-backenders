@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card card-default">
 
-                <div class="card-header text-center">Status
+                <div class="card-header text-center"><font size="+3">Status</font>
 
                 </div>
 
@@ -37,7 +37,7 @@
     <div class="row justify-content-center mt-3">
         <div class="col-md-4">
             <div class="card card-default">
-                <div class="card-header text-center">Connected users</div>
+                <div class="card-header text-center"><font size="+2">Connected users</font></div>
 
                 <div class="card-body">
                     <ul>
@@ -85,20 +85,22 @@
         </div>
         <div class="col-md-4">
             <div class="card card-default">
-                <div class="card-header text-center">My queue</div>
+                <div class="card-header text-center"><font size="+2">My queue</font></div>
 
                 <div class="card-body">
                     <ol>
                         @foreach ($queue as $item)
                         <li>
                             {{ $item->guest->name }}
+                            <p align="right">
                             @if (!$item->isActivated())
-                            <a href="{{ route('activate', $item->guest->id) }}">Activate</a>
-                            <a href="{{ route('remove', $item->guest->id) }}" class="pull-right">Remove</a>
+                                <a href="{{ route('activate', $item->guest->id) }}">Activate</a>
+                                    <a href="{{ route('remove', $item->guest->id) }}" class="pull-right">Remove</a>
                             @else
                             <b>Currently being helped</b>
                             <a href="{{ route('done') }}">Done</a>
                             @endif
+                            </p>
                         </li>
                         @endforeach
                     </ol>
