@@ -16,7 +16,10 @@
                     @endif
                     <ul>
                         @foreach ($whereIAmFirstInLine as $queueItem)
-                        <li><b>It's your turn at {{ $queueItem->host->name }}'s queue</b> </li>
+                        <li>
+                            <b>It's your turn at {{ $queueItem->host->name }}'s queue</b>
+                            <a href="{{ route('leave', $queueItem->host->id) }}">Leave</a>
+                        </li>
                         @endforeach
                     </ul>
                     <ul>
@@ -27,6 +30,7 @@
                             @else
                             You have queue number {{ $list['queueNumber'] }} at {{ $list['user']->name }}'s queue
                             @endif
+                            <a href="{{ route('leave', $list['user']->id) }}">Leave</a>
                         </li>
                         @endforeach
                     </ul>
@@ -44,9 +48,7 @@
                         @foreach ($users as $user)
                         <li>
                             {{ $user->name }}
-                            @if ($user->hasUserInQueue($me))
-                            <a href="{{ route('leave', $user->id) }}">Leave</a>
-                            @else
+                            @if (!$user->hasUserInQueue($me))
                             <a href="{{ route('join', $user->id) }}">Join</a>
                             @endif
                             <ol>
@@ -64,7 +66,7 @@
 
                                 @else
 
-                                @foreach ($user->queue as $item)
+                                @foreach ($user->queueNotHelped as $item)
                                 <li>
                                     @if ($item->guest->id == $me->id)
                                     {{ $item->guest->name }} (<b>Jag</b>)

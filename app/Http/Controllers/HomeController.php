@@ -88,10 +88,6 @@ class HomeController extends Controller
         }
 
         $user = User::FindOrFail($userId);
-        if (!$user->hasUserInQueue($me)) {
-            abort('403', 'You are not in this queue');
-        }
-
         $user->removeFromQueue($me);
 
         return redirect()->route('home');
@@ -105,7 +101,7 @@ class HomeController extends Controller
             $firstInLine->done();
         }
 
-        $nextInLine = $me->queue->where('guest_user_id', $userId)->first();
+        $nextInLine = $me->queueNotHelped->where('guest_user_id', $userId)->first();
         if (!is_null($nextInLine)) {
             $nextInLine->activate();
         }
