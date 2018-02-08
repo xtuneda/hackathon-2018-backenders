@@ -9,7 +9,7 @@ class Queue extends Model
 {
     public function host()
     {
-        return $this->belongsTo('App\User', 'id', 'host_user_id');
+        return $this->belongsTo('App\User', 'host_user_id', 'id');
     }
 
     public function guest()
