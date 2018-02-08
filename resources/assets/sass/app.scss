@@ -9,6 +9,21 @@
 @import '~bootstrap/scss/bootstrap';
 
 .navbar-laravel {
-  background-color: #fff;
+  background-color: #FFA500;
+  text-emphasis-color: #FFFFFF;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.card-body {
+  border-style: none;
+  background-color: #FFFFFF;
+}
+
+.card-header {
+  border-style: none;
+  background-color: #FFFFFF;
+}
+
+.container {
+  
 }

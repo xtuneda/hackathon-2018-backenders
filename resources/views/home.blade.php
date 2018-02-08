@@ -5,7 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
-                <div class="card-header">Status</div>
+
+                <div class="card-header text-center">Status
+
+                </div>
 
                 <div class="card-body">
                     @if ($whereIAmFirstInLine->isEmpty() && $queueStatusList->isEmpty())
@@ -34,7 +37,7 @@
     <div class="row justify-content-center mt-3">
         <div class="col-md-4">
             <div class="card card-default">
-                <div class="card-header">Connected users</div>
+                <div class="card-header text-center">Connected users</div>
 
                 <div class="card-body">
                     <ul>
@@ -72,7 +75,7 @@
                                 @endforeach
 
                                 @endif
-                                
+
                             </ol>
                         </li>
                         @endforeach
@@ -82,7 +85,7 @@
         </div>
         <div class="col-md-4">
             <div class="card card-default">
-                <div class="card-header">My queue</div>
+                <div class="card-header text-center">My queue</div>
 
                 <div class="card-body">
                     <ol>
