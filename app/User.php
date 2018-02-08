@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function hasUserInQueue(User $user)
     {
-        return !$this->queue
+        return !$this->queueNotHelped
         ->filter(function($item) use ($user) {
             return $item->guest_user_id == $user->id;
         })->isEmpty();
@@ -66,12 +66,12 @@ class User extends Authenticatable
 
     public function queueUntilUser(User $user)
     {
-        $queueId = $this->queue
+        $queueId = $this->queueNotHelped
         ->where('guest_user_id', $user->id)
         ->first()
         ->id;
 
-        return $this->queue->where('id', '<=', $queueId);
+        return $this->queueNotHelped->where('id', '<=', $queueId);
     }
 
     public function addToQueue(User $user)
@@ -87,8 +87,10 @@ class User extends Authenticatable
 
     public function removeFromQueue(User $user)
     {
-        $this->queue->where('guest_user_id', $user->id)
-        ->first()
-        ->delete();
+        $queue = $this->queue->where('guest_user_id', $user->id)
+        ->first();
+        if (!is_null($queue)) {
+            $queue->delete();
+        }
     }
 }

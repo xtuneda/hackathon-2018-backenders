@@ -16,7 +16,10 @@
                     @endif
                     <ul>
                         @foreach ($whereIAmFirstInLine as $queueItem)
-                        <li><b>It's your turn at {{ $queueItem->host->name }}'s queue</b> </li>
+                        <li>
+                            <b>It's your turn at {{ $queueItem->host->name }}'s queue</b>
+                            <a href="{{ route('leave', $queueItem->host->id) }}">Leave</a>
+                        </li>
                         @endforeach
                     </ul>
                     <ul>
@@ -63,7 +66,7 @@
 
                                 @else
 
-                                @foreach ($user->queue as $item)
+                                @foreach ($user->queueNotHelped as $item)
                                 <li>
                                     @if ($item->guest->id == $me->id)
                                     {{ $item->guest->name }} (<b>Jag</b>)
